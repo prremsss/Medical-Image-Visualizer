@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Viewer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+
+
+        .canvas-magnifier-glass {
+            position: absolute;
+            border: 3px solid #ffffff;
+            border-radius: 70%;
+            cursor: none;
+            /*Set the size of the magnifier glass:*/
+            width: 200px;
+            height: 200px;
+
+
+        }
+
+        body {
+            height: 100vh;
+            background: rgba(0, 0, 0, 1);
+
+        }
+
+        .container {
+            display: flex;
+            width: 420px;
+            height: 100%;
+            margin: auto;
+            border-radius: 8px;
+            background: #000000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .circular-progress {
+            position: relative;
+            height: 250px;
+            width: 250px;
+            border-radius: 50%;
+            background: conic-gradient(#0078ff 3.6deg, #ededed 0deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circular-progress::before {
+            content: "";
+            position: absolute;
+            height: 210px;
+            width: 210px;
+            border-radius: 50%;
+            background-color: #000000;
+        }
+
+        .progress-value {
+            position: relative;
+            font-size: 40px;
+            font-weight: 600;
+            color: #0078ff;
+        }
+
+        .text {
+            font-size: 30px;
+            font-weight: 500;
+            color: #606060;
+        }
+
+.left-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 60vh;
+    border: 1px solid #000000;
+    width: 37vh;
+    margin: 0 auto;
+    border-radius: 5px;
+        justify-content: space-evenly;
+
+}
+
+.pair-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+
+}
+
+.field {
+    color: #000000;
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 1vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.value {
+    color: #000000;
+    font-weight: normal;
+    font-size: 1vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.right-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+    height: 98vh;
+    width: 19%;
+             margin: 0 auto;
+
+        }
+        .canvas-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+              width: 60%;
+             margin: 0 auto;
+
+        }
+
+         .canvas-wrapper {
+            position: relative;
+        }
+         #canvas{
+                 width: 100%;
+    height: 100%;
+             border-radius: 1000px;
+         }
+
+            .slider-container {
+                display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+       width: 100%;
+    bottom: 0;
+    margin-bottom: 1%;
+    position: absolute;
+    }
+    input[type="range"] {
+          background-color: #ddd;
+
+      width: 100%;
+            margin-left: 10px;
+        margin-right: 10px;
+    }
+
+            #slider-text {
+                font-size: 14px;
+                color: #ffffff;
+                width: 100px;
+            }
+            #play:hover {
+      cursor: pointer;
+    }
+                    #minus:hover {
+      cursor: pointer;
+                        margin-right: 10px;
+    }
+                                    #minus{
+                        margin-right: 10px;
+    }
+                            #plus:hover {
+      cursor: pointer;
+                                margin-left: 10px;
+                                margin-right: 10px;
+    }
+                                     #plus {
+                                margin-left: 10px;
+                                margin-right: 10px;
+    }
+
+                    #button-container{
+                        position: absolute;
+                        bottom: 0;
+                        width: 100%;
+                    display: flex;
+                    }
+    #preprocess-button {
+                position: relative;
+
+                padding: 10px;
+                background-color: #0078ff;
+                color: #fff;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+                cursor: pointer;
+        flex-grow: 1;
+    margin: 5px;
+    width: 100%;
+            }
+
+    #preprocess-button:hover {
+ background: rgb(0, 120, 255);
+	color: #004798;
+    color: white;
+    box-shadow:0 0px 20px #ffffff;
+cursor: pointer;
+}
+    .main-page{
+        position: relative;
+                display: none;
+            align-items: center;
+
+    }
+    .disabled-button {
+         position: relative;
+                padding: 10px;
+  pointer-events: none;
+  background-color: #ccc;
+  color: #888;
+  cursor: not-allowed;
+         border: none;
+                border-radius: 5px;
+                font-size: 16px;
+         flex-grow: 1;
+    margin: 5px;
+    width: 100%;
+}
+
+         .enabled-button {
+                position: relative;
+                padding: 10px;
+                background-color: #0078ff;
+                color: #fff;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+                cursor: pointer;
+         flex-grow: 1;
+    margin: 5px;
+    width: 100%;
+            }
+           .enabled-button:hover {
+ background: rgb(0, 120, 255);
+	color: #004798;
+    color: white;
+    box-shadow:0 0px 20px #ffffff;
+cursor: pointer;
+}
+
+           .menu-container{
+                   top: 0;
+    position: absolute;
+    margin-top: 2%;
+           }
+
+
+
+
+
+
+
+
+
+i.material-icons {
+  font-size: 1.5rem;
+  color: white;
+  position: relative;
+  border-radius: 50%;
+  padding: 5px;
+  margin: 3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: color 0.2s ease, background-color 0.2s ease, transform 0.3s ease;
+}
+
+i.material-icons:after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  border: solid 2px;
+  transform: scale(0.9);
+  position: absolute;
+
+  border-radius: 9%;
+  transition: all 0.3s ease;
+}
+
+i.material-icons:hover:after {
+  transform: scale(1);
+  box-shadow: 10px 0 20px rgba(0, 0, 0, 0.19), 6px 0 6px rgba(0, 0, 0, 0.23);
+}
+
+i.material-icons:nth-of-type(1) {
+  background-color: #000000;
+}
+
+i.material-icons:nth-of-type(1):hover {
+  color: #008BFFFF;
+}
+
+i.material-icons:nth-of-type(1):after {
+  border-color: #008BFFFF;
+}
+
+i.material-icons:nth-of-type(2) {
+  background-color: #000000;
+}
+
+i.material-icons:nth-of-type(2):hover {
+  color: #008BFFFF;
+}
+
+i.material-icons:nth-of-type(2):after {
+  border-color: #008BFFFF;
+}
+
+i.material-icons:nth-of-type(3) {
+  background-color: #000000;
+}
+
+i.material-icons:nth-of-type(3):hover {
+  color: #008BFFFF;
+}
+
+i.material-icons:nth-of-type(3):after {
+  border-color: #008BFFFF;
+}
+i.material-icons:nth-of-type(4) {
+  background-color: #000000;
+}
+
+i.material-icons:nth-of-type(4):hover {
+  color: #008BFFFF;
+}
+
+i.material-icons:nth-of-type(4):after {
+  border-color: #008BFFFF;
+}
+
+
+i.material-icons:hover {
+  background-color: transparent;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+
+@media (min-width: 601px) {
+  i.material-icons {
+    padding: 10px;
+    margin: 5px;
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 993px) {
+  i.material-icons {
+    padding: 20px;
+    margin: 3px;
+    font-size: 3rem;
+  }
+  i.material-icons:after {
+    border-width: 3px;
+    top: 0px;
+    left: 0px;
+  }
+}
+
+ .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #000000;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+        border-radius: 12px;
+            border: 1px solid #007bff;
+
+    }
+
+    .dropdown-content a {
+      color: #ffffff;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+     .dropdown-content a:hover {
+      color: #0074ff;
+    }
+
+
+     .canvas-wrapper {
+  transition: transform 0.5s;
+}
+
+.rotated {
+  transform: rotate(90deg);
+}
+
+
+ul {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  border: 1px solid #008BFFFF;
+  border-radius: 10px;
+  padding: 20px 0;
+  box-sizing: border-box;
+  overflow: hidden;
+    width: 37vh;
+    height: 60vh;
+}
+ul:before {
+  content: '';
+  position: absolute;
+  width: 100%;height: 100%;
+  bottom: -50%;
+  pointer-events: none;
+  z-index: 1;
+}
+ul li {
+  position: relative;
+  list-style: none;
+  text-align:center;
+  margin: 3px;
+}
+ul li label {
+  position: relative;
+
+}
+ul li label input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+
+}
+ul li label input[type="text"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+
+}
+ul li label .icon-box {
+  width: 80px;
+    height: 80px;
+    background: #000000;
+  display: flex;
+  justify-content: center;align-items: center;
+  border: 3px solid #252525;
+  border-radius: 10px;
+  transition: 0.5s;
+      cursor: pointer;
+
+}
+ul li label .icon-box .fa {
+  font-size: 30px;
+  color: #9a9a9a;
+  transition: 0.5s;
+}
+ul li label input[type="checkbox"]:checked ~ .icon-box {
+  background: #000;
+  border: 3px solid #008eff;
+
+}
+ul li label input[type="checkbox"]:checked ~ .icon-box .fa {
+  color: #ffffff;
+
+}
+
+.tooltip {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: black;
+  color: #5e5e5e;
+  padding: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border: 1px solid #5cb4ff;
+    border-radius: 5px;
+}
+
+li:hover .tooltip {
+  opacity: 1;
+}
+
+
+
+.square-input {
+            width: 80px;
+            height: 80px;
+            background: black;
+    display:flex ;
+    justify-content:center ;
+    align-items: center;
+            border: 3px solid #252525;
+             border-radius: 10px;
+            padding: 10px;
+            font-size: 16px;
+    color:#9a9a9a ;
+    text-align: center;
+
+        }
+.square-input::placeholder {
+
+            font-size: 9px; /* Set the placeholder text size */
+            color: #9a9a9a; /* Set the placeholder text color */
+        }
+
+
+.btn{
+    border: 3px solid #252525;
+    display: inline-block;
+    padding: 10px;
+    position: relative;
+    text-align: center;
+    transition: background 600ms ease, color 600ms ease;
+}
+
+input[type="radio"].toggle {
+    display: none;
+    & + label{
+        cursor: pointer;
+        min-width: 60px;
+        &:hover{
+            background: none;
+            color: #9a9a9a;
+        }
+        &:after{
+            background: #1a1a1a;
+            content: "";
+            height: 100%;
+            position: absolute;
+            top: 0;
+            transition: left 200ms cubic-bezier(0.77, 0, 0.175, 1);
+            width: 100%;
+            z-index: -1;
+        }
+    }
+    &.toggle-left + label {
+        border-right: 0;
+        &:after{
+            left: 100%
+        }
+    }
+    &.toggle-right + label{
+        margin-left: -5px;
+        &:after{
+            left: -100%;
+        }
+    }
+    &:checked + label {
+        cursor: default;
+        color: #5cb4ff;
+        transition: color 200ms;
+        &:after{
+            left: 0;
+        }
+    }
+}
+
+        .scan-type {
+            display: flex;
+            justify-content: center;
+width: 200px;
+
+        }
+    </style>
+</head>
+<body>
+
+<div id="progress-container" class="container">
+    <div class="circular-progress">
+        <span class="progress-value">0%</span>
+    </div>
+    <span id="progress-text" class="text">Loading...</span>
+</div>
+
+<div class="main-page">
+<div class="left-container">
+    <div class="pair-container">
+        <div class="field">Acquisition Date: </div>
+        <div class="value">2020/04/13</div>
+    </div>
+    <div class="pair-container">
+        <div class="field">Patient Name: </div>
+        <div class="value">RUIMY ELISE</div>
+    </div>
+        <div class="pair-container">
+        <div class="field">Patient BirthDate: </div>
+        <div class="value">2000/05/04</div>
+    </div>
+
+        <div class="pair-container">
+        <div class="field">Patient Sex: </div>
+        <div class="value">Female</div>
+    </div>
+    <div class="pair-container">
+        <div class="field">Patient Age: </div>
+        <div class="value">23</div>
+    </div>
+    <div class="pair-container">
+        <div class="field">Modality: </div>
+        <div class="value">MRI</div>
+    </div>
+
+</div>
+<div class="canvas-container">
+            <div id="top-menu" class="menu-container">
+                  <div class="main-wrapper">
+                      <i id="rotate-" class="material-icons">rotate_90_degrees_ccw</i>
+    <i id="rotate" class="material-icons">rotate_90_degrees_cw</i>
+    <i id="magnif" class="material-icons">zoom_in</i>
+    <i id="reset" class="material-icons">autorenew</i>
+
+  </div>
+
+
+    </div>
+
+    <div class="canvas-wrapper">
+        <canvas id="canvas" width="412" height="412"></canvas>
+
+
+    </div>
+        <div id="slider" class="slider-container">
+            <i id="play" class="fa fa-play-circle-o" style="font-size:24px;color:#0078ff"></i>
+            <i id="plus" class="glyphicon glyphicon-plus" style="font-size:20px;color:#0078ff"></i>
+            <i id="minus" class="glyphicon glyphicon-minus" style="font-size:20px;color:#0078ff"></i>
+
+        <input type="range" id="slice-slider" min="0" max="0" value="0" step="1">
+        <span id="slider-text"></span>
+    </div>
+
+</div>
+     <div class="right-container">
+         <ul>
+             <div class="scan-type">
+             <input id="toggle-on" class="toggle toggle-left" name="toggle" value="MRI" type="radio" checked>
+<label for="toggle-on" class="btn">MRI</label>
+<input id="toggle-off" class="toggle toggle-right" name="toggle" value="CT" type="radio">
+<label for="toggle-off" class="btn">CT</label>
+             </div>
+
+<div class="dropdown">
+  <li>
+    <label>
+      <input type="checkbox" id="myCheckbox" name="" />
+      <div class="icon-box">
+        <i id = "myIcon" class="fa fa-circle-half-stroke"></i>
+      </div>
+    </label>
+  </li>
+
+  <div class="dropdown-content">
+    <a href="#" onclick="optionClicked('Lungs')">Lungs</a>
+    <a href="#" onclick="optionClicked('Brain')">Brain</a>
+    <a href="#" onclick="optionClicked('Liver')">Liver</a>
+  </div>
+</div>
+
+      <li>
+        <label>
+          <input id="denoising" type="checkbox" name="" />
+          <div class="icon-box">
+            <i class="fa fa-wand-sparkles"></i>
+          </div>
+        </label>
+              <span class="tooltip">Denoising</span>
+
+      </li>
+      <li>
+        <label>
+          <input id="segmentation" type="checkbox" name="" />
+          <div class="icon-box">
+            <i class="fa fa-brush"></i>
+          </div>
+        </label>
+          <span class="tooltip">Segmentation</span>
+
+      </li>
+      <li>
+        <label>
+          <input id="standardization" type="checkbox" name="" />
+          <div class="icon-box">
+            <i class="fa fa-filter"></i>
+          </div>
+        </label>
+                    <span class="tooltip">Standardization</span>
+
+      </li>
+      <li>
+        <label>
+          <input id="biasCorrection" type="checkbox" name="biasCorrection" />
+          <div class="icon-box">
+            <i class="fa fa-regular fa-pen-to-square"></i>
+          </div>
+        </label>
+                              <span class="tooltip">Bias Correction</span>
+
+      </li>
+      <li>
+        <label>
+          <input id="skullRemoval" type="checkbox" name="" />
+          <div class="icon-box">
+        <i class="fa fa-eraser"></i>
+          </div>
+        </label>
+          <span class="tooltip">Skull Removal</span>
+
+      </li>
+      <li>
+        <label>
+          <input id="crop" type="checkbox" name="" />
+          <div class="icon-box">
+        <i class="fa fa-crop-simple"></i>
+          </div>
+        </label>
+          <span class="tooltip">Crop</span>
+
+      </li>
+             <li>
+            <input id="desiredNumSlices" type="text" class="square-input" placeholder="Num Slices">
+
+
+      </li>
+
+    </ul>
+         <div id ="button-container">
+                 <button id="preprocess-button">Preprocess</button>
+             <button id="download-button"  class="disabled-button" >Download</button>
+
+         </div>
+
+</div>
+</div>
+<script>
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext("2d");
+    const sliceSlider = document.getElementById('slice-slider');
+    const playbutton = document.getElementById("play");
+    const plus = document.getElementById("plus");
+    const minus = document.getElementById("minus");
+    const download = document.getElementById("download-button");
+    const magnif =document.getElementById("magnif");
+    const rotate =document.getElementById("rotate");
+    const rotate_ =document.getElementById("rotate-");
+    const reset =document.getElementById("reset");
+
+const canvasWrapper = document.querySelector('.canvas-wrapper');
+const canvas_magnifier_glass= document.querySelector('.canvas-magnifier-glass');
+    let currentImageIndex = 0;
+    let pixelData = new Uint8ClampedArray();
+    let width;
+    let height;
+    let standarWidth = 412;
+    let standarHeight = 412;
+    let finalArray = [];
+    let originalArray=[];
+    let prepdata=[];
+    let state=0;
+    let numSlices;
+    let pixelData2;
+    const sliderText = document.getElementById("slider-text")
+    const progresstext=document.getElementById("progress-text")
+    let isClicked = false;
+    let removeMagnifyListeners;
+let removeRotateListeners;
+let removeResetListeners;
+let rotationAngle = 0;
+let removeEventListeners = null;
+ let organ = '';
+ let denoising = false;
+ let desiredNumSlices = '';
+  let segmentation = false;
+  let standardization = false;
+  let biasCorrection = false;
+  let skullRemoval = false;
+  let crop = false;
+
+
+
+    fetch('/pixeldata')
+        .then(res => res.json())
+        .then(data => {
+           handlePixelData(data);
+        originalArray = finalArray;
+
+
+
+        addMagnifyEventListener();
+        addRotateEventListener();
+        addResetEventListener();
+
+        })
+        .catch(error => {
+            // Handle any errors
+        });
+
+ document.addEventListener("DOMContentLoaded", function() {
+            // Attach click event listener to the preprocess button
+            document.getElementById("preprocess-button").addEventListener("click", function() {
+                     const denosingcheckbox=document.getElementById("denoising");
+                     const segmentationcheckbox=document.getElementById("segmentation");
+                     const standardizationcheckbox=document.getElementById("standardization");
+                     const biasCorrectioncheckbox=document.getElementById("biasCorrection");
+                     const skullRemovalcheckbox=document.getElementById("skullRemoval");
+                     const cropcheckbox=document.getElementById("crop");
+
+                    if (denosingcheckbox.checked) {
+                                denoising=true   ;   }
+                    if (segmentationcheckbox.checked) {
+                                segmentation=true   ;   }
+                    if (standardizationcheckbox.checked) {
+                                standardization=true   ;   }
+                    if (biasCorrectioncheckbox.checked) {
+                                biasCorrection=true   ;   }
+                    if (skullRemovalcheckbox.checked) {
+                                skullRemoval=true   ;   }
+                    if (cropcheckbox.checked) {
+                                crop=true   ;   }
+
+
+                const selectedValue = document.querySelector('input[name="toggle"]:checked').value;
+                console.log(selectedValue);
+                desiredNumSlices = document.getElementById('desiredNumSlices').value;
+
+
+
+                hideDiv();
+                showProgressBar();
+
+                // Send a fetch request to the Flask backend
+                  fetch('/preprocess', {
+                method: 'POST', // You can use POST or GET depending on your server route
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ selectedValue,organ,denoising,desiredNumSlices,segmentation,standardization,biasCorrection,skullRemoval,crop }), // Send the selected value as JSON
+            })
+
+        .then(res => res.json())
+        .then(data => {
+
+             clearCanvas();
+                handlePixelData(data);
+                prepdata=finalArray;
+                enableButton();
+                removeMagnifyListeners();
+                removeRotateListeners();
+                removeResetListeners();
+                addMagnifyEventListener();
+                addRotateEventListener();
+                addResetEventListener();
+        })
+        .catch(error => {
+            // Handle any errors
+        });
+            });
+        });
+ document.getElementById('download-button').addEventListener('click', function () {
+            fetch('/download_dicom', {
+                method: 'POST',
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'Preprocessedata.nii'; // Specify the desired file name
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+
+    function handlePixelData(data) {
+
+
+
+
+
+        pixelData = new Uint8ClampedArray(data.pixels);
+        pixelData2 = JSON.parse(data.pixels);
+        width = data.width;
+        height = data.height;
+        numSlices = pixelData2.length;
+
+        sliderText.textContent = `${currentImageIndex + 1}/${numSlices}`;
+        let numRows = pixelData2[0].length;
+        let numCols = pixelData2[0][0].length;
+
+        // Print the shape
+        console.log("Number of slices:", numSlices);
+        console.log("Number of rows:", numRows);
+        console.log("Number of columns:", numCols);
+
+        grayToRGB();
+        displayImage(currentImageIndex);
+
+        console.log("before");
+        console.log(width);
+        sliceSlider.min = 0;
+        sliceSlider.max = numSlices - 1;
+        sliceSlider.value = currentImageIndex;
+
+        // Attach scroll wheel event listener to the canvas
+        canvas.addEventListener("wheel", (event) => {
+            event.preventDefault();
+
+            // Determine the scroll direction (up or down)
+            const scrollDirection = event.deltaY > 0 ? "down" : "up";
+
+            // Update the current image index based on the scroll direction
+            if (scrollDirection === "down" && currentImageIndex !== 0) {
+                currentImageIndex--;
+                if (currentImageIndex <= 0) {
+                    currentImageIndex = numSlices - 1;
+                }
+            } else {
+                currentImageIndex++;
+                if (currentImageIndex >= numSlices) {
+                    currentImageIndex = 0;
+                }
+            }
+
+            // Display the image at the new index
+            displayImage(currentImageIndex);
+            updateSliceSlider();
+        });
+
+        let intervalId = null;
+        let delay = 100; // Initial delay between each image (1 second in this example)
+
+        canvas.addEventListener('click', function (event) {
+
+        });
+
+        const classesToAdd =['fa','fa-play-circle-o']
+        const classesToRemove=['fa','fa-pause-circle-o']
+        playbutton.addEventListener('click',function (event){
+            if (intervalId === null) {
+                intervalId = setInterval(displayNextImage, delay);
+                playbutton.classList.remove('fa-play-circle-o');
+                playbutton.classList.add('fa-pause-circle-o');
+            } else {
+                clearInterval(intervalId);
+                intervalId = null;
+                 playbutton.classList.remove('fa-pause-circle-o');
+    playbutton.classList.add('fa-play-circle-o');
+            }
+        });
+
+        minus.addEventListener('click',function (event){
+            delay += 5;
+            if (intervalId !== null) {
+                    clearInterval(intervalId);
+                    intervalId = setInterval(displayNextImage, delay);
+                }
+        });
+         plus.addEventListener('click',function (event){
+             if (delay > 20) {
+            delay -= 5;
+             if (intervalId !== null) {
+                        clearInterval(intervalId);
+                        intervalId = setInterval(displayNextImage, delay);
+                    }}
+        });
+        // Keyboard event listener
+        document.addEventListener('keydown', function (event) {
+            if (event.key === '+') {
+                delay += 10; // Increase the delay by 100 milliseconds
+                if (intervalId !== null) {
+                    clearInterval(intervalId);
+                    intervalId = setInterval(displayNextImage, delay);
+                }
+            } else if (event.key === '-') {
+                if (delay > 20) { // Minimum delay of 100 milliseconds
+                    delay -= 10; // Decrease the delay by 100 milliseconds
+                    if (intervalId !== null) {
+                        clearInterval(intervalId);
+                        intervalId = setInterval(displayNextImage, delay);
+                    }
+                }
+            }
+            console.log(delay);
+        });
+
+
+
+
+        document.addEventListener("keydown", function (event) {
+            // Check if the Ctrl key is pressed and no magnify action is in progress
+            if (event.ctrlKey && !removeEventListeners) {
+                // Trigger the magnify function with desired parameters and store the returned function
+                removeEventListeners = magnifyCanvas("canvas", 2);
+            }
+        });
+
+        document.addEventListener("keyup", function (event) {
+            // Check if the Ctrl key is released and magnify action is in progress
+            if (!event.ctrlKey && removeEventListeners) {
+                // Call the removeEventListeners function to remove the event listeners and delete the reference
+                removeEventListeners();
+                removeEventListeners = null;
+            }
+        });
+
+        // Slider
+        sliceSlider.addEventListener('input', function (event) {
+            currentImageIndex = parseInt(event.target.value);
+            displayImage(currentImageIndex);
+            sliderText.textContent = `${currentImageIndex + 1}/${numSlices}`;
+        });
+    }
+
+    function addRotateEventListener() {
+    removeRotateListeners = rotate.addEventListener('click', () => {
+        console.log("I click rotate ");
+
+        rotationAngle += 90;
+        canvasWrapper.style.transform = `rotate(${rotationAngle}deg)`;
+    });
+
+    removeRotateListeners = rotate_.addEventListener('click', () => {
+        console.log("I click rotate ");
+
+        rotationAngle -= 90;
+        canvasWrapper.style.transform = `rotate(${rotationAngle}deg)`;
+    });
+}
+function addResetEventListener() {
+    removeResetListeners = reset.addEventListener('click', () => {
+console.log("Before if: state =", state);
+        if (state == 0){
+            finalArray = originalArray;
+            state=1;
+            numSlices = finalArray.length;
+        let numRows = finalArray[0].length;
+        let numCols = finalArray[0][0].length;
+            console.log("Number of slices:", numSlices);
+        console.log("Number of rows:", numRows);
+        console.log("Number of columns:", numCols);
+
+
+        }
+       else if (state ==1){
+            finalArray = prepdata;
+                   state=0;
+                   numSlices = finalArray.length;
+        let numRows = finalArray[0].length;
+        let numCols = finalArray[0][0].length;
+            console.log("Number of slices:", numSlices);
+        console.log("Number of rows:", numRows);
+        console.log("Number of columns:", numCols);
+
+        }
+        currentImageIndex = 0;
+        displayNextImage(currentImageIndex);
+        console.log("After if: state =", state);
+
+    });
+}
+function addMagnifyEventListener() {
+    removeMagnifyListeners = magnif.addEventListener("click", function () {
+        console.log("I click");
+        console.log(isClicked);
+        console.log(removeEventListeners);
+
+        if (isClicked && removeEventListeners) {
+            // Execute the second function when it's already clicked
+            removeEventListeners();
+            removeEventListeners = null;
+        } else {
+            // Execute the first function when it's not clicked yet
+            removeEventListeners = magnifyCanvas("canvas", 2);
+        }
+
+        // Toggle the clicked state
+        isClicked = !isClicked;
+    });
+}
+
+function optionClicked(option) {
+        organ=option;
+  const checkbox = document.getElementById("myCheckbox");
+    const icon = document.getElementById("myIcon");
+
+  if (checkbox) {
+    checkbox.checked = true;
+    if (option === "Lungs") {
+      icon.className = "fa fa-lungs";
+    } else if (option === "Brain") {
+      icon.className = "fa fa-brain";
+    }
+     else if (option === "Liver") {
+      icon.className = "fa fa-circle-half-stroke";
+    }
+
+  }
+
+  // Store the clicked option in a variable
+  const selectedOption = option;
+  console.log("Selected option:", selectedOption);
+}
+    function enableButton() {
+  download.classList.remove("disabled-button");
+  download.classList.add("enabled-button");
+}
+ function clearCanvas() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    currentImageIndex = 0;
+  }
+
+    function magnifyCanvas(canvasID, zoom) {
+        var canvas, glass, w, h, bw;
+        canvas = document.getElementById(canvasID);
+        /*create magnifier glass:*/
+        glass = document.createElement("DIV");
+        glass.setAttribute("class", "canvas-magnifier-glass");
+        /*insert magnifier glass:*/
+        canvas.parentElement.insertBefore(glass, canvas);
+        /*set background properties for the magnifier glass:*/
+        glass.style.backgroundImage = "url('" + canvas.toDataURL() + "')";
+        glass.style.backgroundRepeat = "no-repeat";
+        glass.style.backgroundSize = (canvas.width * zoom) + "px " + (canvas.height * zoom) + "px";
+        bw = 3;
+        w = glass.offsetWidth / 2;
+        h = glass.offsetHeight / 2;
+        /*execute a function when someone moves the magnifier glass over the canvas:*/
+        glass.addEventListener("mousemove", moveMagnifier);
+        canvas.addEventListener("mousemove", moveMagnifier);
+        /*and also for touch screens:*/
+        glass.addEventListener("touchmove", moveMagnifier);
+        canvas.addEventListener("touchmove", moveMagnifier);
+
+        function moveMagnifier(e) {
+            var pos, x, y;
+            /*prevent any other actions that may occur when moving over the canvas*/
+            e.preventDefault();
+            /*get the cursor's x and y positions:*/
+            pos = getCursorPos(e);
+            x = pos.x;
+            y = pos.y;
+            /*prevent the magnifier glass from being positioned outside the canvas:*/
+            if (x > canvas.width - (w / zoom)) {
+                x = canvas.width - (w / zoom);
+            }
+            if (x < w / zoom) {
+                x = w / zoom;
+            }
+            if (y > canvas.height - (h / zoom)) {
+                y = canvas.height - (h / zoom);
+            }
+            if (y < h / zoom) {
+                y = h / zoom;
+            }
+            /*set the position of the magnifier glass:*/
+            glass.style.left = (x - w) + "px";
+            glass.style.top = (y - h) + "px";
+            /*display what the magnifier glass "sees":*/
+            glass.style.backgroundPosition = "-" + ((x * zoom) - w + bw) + "px -" + ((y * zoom) - h + bw) + "px";
+        }
+
+function getCursorPos(e) {
+  var a, x = 0, y = 0;
+  e = e || window.event;
+  /*get the x and y positions of the canvas:*/
+  a = canvas.getBoundingClientRect();
+  /*calculate the cursor's x and y coordinates, relative to the canvas:*/
+  x = e.pageX - a.left;
+  y = e.pageY - a.top;
+  /*consider any page scrolling:*/
+  x = x - window.pageXOffset;
+  y = y - window.pageYOffset;
+
+  /* Adjust the cursor position based on the rotation angle of the wrapper */
+  const wrapperRotationAngle = getWrapperRotationAngle();
+  const rotatedPos = rotatePoint({ x, y }, { x: a.width / 2, y: a.height / 2 }, -wrapperRotationAngle);
+
+  return { x: rotatedPos.x, y: rotatedPos.y };
+}
+
+// Helper function to calculate the rotation angle of the wrapper
+function getWrapperRotationAngle() {
+  const transform = window.getComputedStyle(canvasWrapper).getPropertyValue('transform');
+  const matrix = new DOMMatrixReadOnly(transform);
+  return Math.atan2(matrix.b, matrix.a) * (180 / Math.PI);
+}
+
+// Helper function to rotate a point around a pivot
+function rotatePoint(point, pivot, angle) {
+  const radians = angle * (Math.PI / 180);
+  const cos = Math.cos(radians);
+  const sin = Math.sin(radians);
+  const x = point.x - pivot.x;
+  const y = point.y - pivot.y;
+  const rotatedX = x * cos - y * sin;
+  const rotatedY = x * sin + y * cos;
+  return { x: rotatedX + pivot.x, y: rotatedY + pivot.y };
+}
+
+        // Event listener for mousemove event
+        function moveMagnifierHandler(e) {
+            moveMagnifier(e);
+        }
+
+        // Add event listeners
+        canvas.addEventListener("mousemove", moveMagnifierHandler);
+        glass.addEventListener("mousemove", moveMagnifierHandler);
+        canvas.addEventListener("touchmove", moveMagnifierHandler);
+        glass.addEventListener("touchmove", moveMagnifierHandler);
+
+        return function () {
+            // Remove event listeners
+            canvas.removeEventListener("mousemove", moveMagnifierHandler);
+            glass.removeEventListener("mousemove", moveMagnifierHandler);
+            canvas.removeEventListener("touchmove", moveMagnifierHandler);
+            glass.removeEventListener("touchmove", moveMagnifierHandler);
+            // Remove the magnifier glass from the DOM
+            glass.parentElement.removeChild(glass);
+        };
+    }
+
+
+    function updateSliceSlider() {
+        sliceSlider.value = currentImageIndex;
+        sliderText.textContent = `${currentImageIndex + 1}/${numSlices}`;
+
+    }
+
+    function displayNextImage() {
+        displayImage(currentImageIndex);
+        currentImageIndex++;
+        updateSliceSlider();
+        if (currentImageIndex >= numSlices) {
+            currentImageIndex = 0; // Reset the index to start from the beginning
+        }
+    }
+
+    function grayToRGB() {
+        console.log('executing grayTorgb');
+        let index = 0;
+        finalArray = [];
+        function processSlice() {
+
+            const rgbaArray = new Uint8ClampedArray(standarWidth * standarHeight * 4);
+            const resizedArray = resizeArray(pixelData2[index], standarWidth, standarHeight);
+            const imageArrayFlat = resizedArray.flat();
+
+            for (let i = 0; i < standarWidth * standarHeight; i++) {
+                const grayValue = imageArrayFlat[i];
+                const rescaledValue = Math.floor((grayValue / 255) * 255);
+                const j = i * 4;
+                rgbaArray[j] = rescaledValue;
+                rgbaArray[j + 1] = rescaledValue;
+                rgbaArray[j + 2] = rescaledValue;
+                rgbaArray[j + 3] = 255;
+            }
+
+            finalArray.push(rgbaArray);
+            let progress = Math.floor((finalArray.length / numSlices) * 100);
+            console.log("progress ", progress);
+            // Call the function to update the progress bar and percentage
+            updateProgressBar(progress, finalArray.length);
+
+            if (progress < 100) {
+                index++;
+                setTimeout(processSlice, 1); // Delay before processing the next slice
+            } else {
+                hideProgressBar();
+                showDiv();
+            }
+        }
+
+        processSlice();
+    }
+
+
+    function updateProgressBar(percentage, slice) {
+        const circularProgress = document.querySelector(".circular-progress");
+        const progressValue = document.querySelector(".progress-value");
+        const slices = document.querySelector(".text");
+
+
+        progressValue.textContent = `${percentage}%`;
+        circularProgress.style.background = `conic-gradient(#0078ff ${percentage * 3.6}deg, #ededed 0deg)`;
+        slices.textContent = `${slice}/${numSlices}`;
+    }
+
+
+    function hideProgressBar() {
+        const progressBarContainer = document.getElementById('progress-container');
+        progressBarContainer.style.display = 'none';
+    }
+    function showProgressBar() {
+        const progressBarContainer = document.getElementById('progress-container');
+        progressBarContainer.style.display = 'flex';
+
+
+    progresstext.textContent="Preprocessing..."
+
+         const progressValue = document.querySelector(".progress-value");
+        const circularProgress = document.querySelector(".circular-progress");
+
+
+        progressValue.textContent = "0%";
+        circularProgress.style.background = `conic-gradient(#0078ff ${0 * 3.6}deg, #ededed 0deg)`;
+    }
+
+    function showDiv() {
+        var div = document.querySelector('.main-page');
+        div.style.display = 'flex';
+    }
+
+     function hideDiv() {
+        var div = document.querySelector('.main-page');
+        div.style.display = 'none';
+    }
+
+    function displayImage(index) {
+    const img = new ImageData(finalArray[index], standarWidth, standarHeight);
+
+    // Clear the canvas before drawing the new image
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Calculate the coordinates to center the image
+    const centerX = (canvas.width - standarWidth) / 2;
+    const centerY = (canvas.height - standarHeight) / 2;
+
+    context.putImageData(img, centerX, centerY);
+}
+
+    function resizeArray(originalArray, width, height) {
+    const originalWidth = originalArray.length;
+    const originalHeight = originalArray[0].length;
+
+    // Calculate the aspect ratios
+    const aspectRatioX = originalWidth / width;
+    const aspectRatioY = originalHeight / height;
+
+    // Determine the scaling factor that maintains the original aspect ratio
+    const scaleFactor = aspectRatioX > aspectRatioY ? aspectRatioX : aspectRatioY;
+
+    // Calculate the new dimensions to maintain the ratio
+    const newWidth = Math.floor(originalWidth / scaleFactor);
+    const newHeight = Math.floor(originalHeight / scaleFactor);
+
+    // Calculate offsets to center the original content
+    const offsetX = Math.floor((width - newWidth) / 2);
+    const offsetY = Math.floor((height - newHeight) / 2);
+
+    const resizedArray = [];
+
+    for (let x = 0; x < height; x++) {
+        const row = [];
+
+        for (let y = 0; y < width; y++) {
+            if (x >= offsetX && x < offsetX + newWidth && y >= offsetY && y < offsetY + newHeight) {
+                const originalX = Math.floor((x - offsetX) * scaleFactor);
+                const originalY = Math.floor((y - offsetY) * scaleFactor);
+
+                const grayValue = originalArray[originalX][originalY];
+                row.push(grayValue);
+            } else {
+                // Fill with a default value (e.g., 0) outside the original content
+                row.push(0);
+            }
+        }
+
+            resizedArray.push(row);
+
+    }
+
+    return resizedArray;
+}
+function getArrayShape(array) {
+  var shape = [];
+  var currentDimension = array;
+
+  while (Array.isArray(currentDimension)) {
+    shape.push(currentDimension.length);
+    currentDimension = currentDimension[0];
+  }
+
+  return shape;
+}
+
+</script>
+</body>
+</html>

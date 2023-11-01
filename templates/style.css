@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.canvas-wrapper {
+    position: relative;
+}
+
+.canvas-magnifier-glass {
+    position: absolute;
+    border: 3px solid #ffffff;
+    border-radius: 70%;
+    cursor: none;
+    /* Set the size of the magnifier glass: */
+    width: 300px;
+    height: 300px;
+}
+
+body {
+    height: 100vh;
+    background: rgba(0, 0, 0, 1);
+}
+
+.container {
+    display: flex;
+    width: 420px;
+    height: 100%;
+    margin: auto;
+    border-radius: 8px;
+    background: #000000;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.circular-progress {
+    position: relative;
+    height: 250px;
+    width: 250px;
+    border-radius: 50%;
+    background: conic-gradient(#0078ff 3.6deg, #ededed 0deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circular-progress::before {
+    content: "";
+    position: absolute;
+    height: 210px;
+    width: 210px;
+    border-radius: 50%;
+    background-color: #000000;
+}
+
+.progress-value {
+    position: relative;
+    font-size: 40px;
+    font-weight: 600;
+    color: #0078ff;
+}
+
+.text {
+    font-size: 30px;
+    font-weight: 500;
+    color: #606060;
+}
+
+.canvas-container {
+    position: relative;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.slider-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+input[type="range"] {
+    background-color: #ddd;
+    width: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#slider-text {
+    font-size: 14px;
+    color: #333;
+    width: 100px;
+}
+
+#play:hover {
+    cursor: pointer;
+}
+
+#minus:hover {
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+#minus {
+    margin-right: 10px;
+}
+
+#plus:hover {
+    cursor: pointer;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#plus {
+    margin-left: 10px;
+    margin-right: 10px;
+}
